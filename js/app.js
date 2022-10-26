@@ -1,6 +1,10 @@
 //funcion para arrancar la APP
 function iniciarApp() {
 
+    //variables
+    //variable que representa al input categorias
+    const selectCategorias = document.querySelector('#categorias');
+
     //llamar la funcion para obtener categorias
     obtenerCategorias();
 
@@ -11,7 +15,27 @@ function iniciarApp() {
         //fetch
         fetch( url )
             .then( respuesta => respuesta.json() )
-                .then( resultado => console.log( resultado ));
+                //llamamos la funcion para poder mostrar las categorias
+                .then( resultado => mostrarCategorias( resultado.categories ));
+    }
+
+    //funcion para mostrar las categorias en el input
+    //definimos categorias desde el parametro como un array vacio
+    function mostrarCategorias( categorias = [] ) {
+        //iterar sobre las categorias
+        categorias.forEach( categoria => {
+            //destructuring
+            const { strCategory } = categoria;
+            //construir el html
+            //cuando se usa createelement se recomienda poner la etiqueta en mayusculas
+            const option = document.createElement('OPTION');
+            //se pone el value strCategory
+            option.value = strCategory;
+            //textcontent
+            option.textContent = strCategory;
+            //renderizar
+            selectCategorias.appendChild( option );
+        });
     }
 
 }
