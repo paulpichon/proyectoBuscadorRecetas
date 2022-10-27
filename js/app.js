@@ -45,7 +45,10 @@ function iniciarApp() {
         const categoria = e.target.value;
         //url
         const url = `https://www.themealdb.com/api/json/v1/1/filter.php?c=${ categoria }`;
-        console.log( url );
+        //fetch a la url
+        fetch( url )
+            .then( respuesta => respuesta.json() )
+            .then( datos => console.log( datos ) );
     }
 
 }
