@@ -9,6 +9,11 @@ function iniciarApp() {
 
     //variable donde se renderizaran los resultados
     const resultado = document.querySelector('#resultado');
+    //variable para modal
+    //se pasa como primer parametro el id del modal que esta en el HTML
+    //y como segundo parametro el objeto con las configuraciones del modal
+    //en esta caso estara vacio
+    const modal = new bootstrap.Modal('#modal', {}); 
 
     //llamar la funcion para obtener categorias
     obtenerCategorias();
@@ -155,7 +160,28 @@ function iniciarApp() {
     //funcion para mostrar una receta en el modal
     //como parametro le pasamos una receta
     function mostrarRecetaModal( receta ) {
+        //destructuring
+        const { idMeal, strInstructions, strMeal, strMealThumb } = receta;
 
+        //añadir contenido al modal
+        //variable que representa el pedaso de html en el index.html para el titulo del modal
+        const modalTitle = document.querySelector('.modal .modal-title');
+        //textcontent
+        modalTitle.textContent = strMeal;
+
+        //cuerpo del modal
+        const modalBody = document.querySelector('.modal .modal-body');
+        //para usar innerhtml debes de tener mucha seguridad de donde viene los datos
+        modalBody.innerHTML = `
+            <img class="img-fluid" src="${ strMealThumb }" alt="receta ${ strMeal }" > 
+            <h3 class="my-3">Instrucciones</h3>
+            <p>${ strInstructions }</p>
+        `;
+
+
+        //muestra el modal
+        //el metodo .show() es del propio modal de boostrap
+        modal.show();
     }
 
     //funcion para limpiar el html
