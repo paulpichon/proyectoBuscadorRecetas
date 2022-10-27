@@ -231,6 +231,14 @@ function iniciarApp() {
 
         //LOCALSTORAGE
         btnFavorito.onclick = function() {
+
+            //comprobamos si existe algun ID repetido
+            if ( existeStorage( idMeal ) ) {
+                //si existe con el return ya no dejamos que ejecute codigo
+                //y por lo tanto que no agregue a favoritos
+                return;
+            }
+            
             //llamar funcion para agregar a favoritos
             //como argumento se manda un objeto con la informacion id, titulo de comida, e imagen de la receta a guardar
             agregarFavorito({
@@ -239,11 +247,6 @@ function iniciarApp() {
                 img: strMealThumb
             });
         }
-
-
-
-
-
 
         //BOTON CERRAR MODAL
         //botones de cerrar y favorito
@@ -260,8 +263,6 @@ function iniciarApp() {
             //y con .hide() se cierra el modal
             modal.hide();
         }
-
-
 
         //renderizar
         //renderizar boton favoritos
@@ -283,6 +284,12 @@ function iniciarApp() {
         const favoritos = JSON.parse( localStorage.getItem('favoritos') ) ?? [];
         //crear un registro
         localStorage.setItem('favoritos', JSON.stringify( [ ...favoritos, receta ] ));
+    }
+    //funcion para verificar si el id de la receta agregada ya existe en el localstorage
+    function existeStorage( id ) {
+        //obtiene de localstorage y lo convierte con json.stringify en caso de haber algo guardado y en caso que no sera un arreglo vacio
+        const favoritos = JSON.parse( localStorage.getItem('favoritos') ) ?? [];
+        return favoritos.some( favorito => favorito.id === id );
     }
 
     //funcion para limpiar el html
