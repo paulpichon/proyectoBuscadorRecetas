@@ -4,19 +4,32 @@ function iniciarApp() {
     //variables
     //variable que representa al input categorias
     const selectCategorias = document.querySelector('#categorias');
-    //agregar un lsitener a selectCategorias para cuando hagan un change
-    selectCategorias.addEventListener('change', seleccionarCategoria);
-
     //variable donde se renderizaran los resultados
     const resultado = document.querySelector('#resultado');
+    //agregar un lsitener a selectCategorias para cuando hagan un change
+    //se verifica si existe selectCategorias
+    if ( selectCategorias ) {
+        //si existe select categorias
+        selectCategorias.addEventListener('change', seleccionarCategoria);
+        //llamar la funcion para obtener categorias
+        obtenerCategorias();
+    }
+
+    //seleccionamos clase favoritos del archivo favoritos.html
+    const favoritosDiv = document.querySelector('.favoritos');
+    //verificamos si existe  favoritosDiv
+    if ( favoritosDiv ) {
+        //llamamos la funcion para obtener favoritos
+        obtenerFavoritos();
+    }
+
+    
     //variable para modal
     //se pasa como primer parametro el id del modal que esta en el HTML
     //y como segundo parametro el objeto con las configuraciones del modal
     //en esta caso estara vacio
     const modal = new bootstrap.Modal('#modal', {}); 
 
-    //llamar la funcion para obtener categorias
-    obtenerCategorias();
 
     //funcion para obtener categorias
     function obtenerCategorias() {
@@ -93,9 +106,10 @@ function iniciarApp() {
             //estilos
             recetaImagen.classList.add('card-img-top');
             //alt a la imagen
-            recetaImagen.alt = `Imagen de la receta ${ strMeal }`;
+            recetaImagen.alt = `Imagen de la receta ${ strMeal ?? receta.title }`;
             //source de la imagen
-            recetaImagen.src = strMealThumb;
+            //si no se muestra con strMealThumb se muestra con receta.img
+            recetaImagen.src = strMealThumb ?? receta.img;
 
             //body del card
             const recetaCardBody = document.createElement('DIV');
@@ -107,7 +121,8 @@ function iniciarApp() {
             //estilos
             recetaHeading.classList.add('card-title', 'mb-3');
             //textcontent
-            recetaHeading.textContent = strMeal;
+            //si viene desde la API muestra strMeal o desde si viene de localstorage muestra receta.title
+            recetaHeading.textContent = strMeal ?? receta.title;
 
             //button de enlace
             const recetaButton = document.createElement('BUTTON');
@@ -123,7 +138,8 @@ function iniciarApp() {
             //al no estar renderizado aun en el html usamos onclick
             recetaButton.onclick = function() {
                 //llamamos funcion para seleccionar receta
-                seleccionarReceta( idMeal );
+                //si no viene idMeal de la api viene desde localstorage
+                seleccionarReceta( idMeal ?? receta.id );
             }
 
             //inyectar en el html
@@ -240,6 +256,8 @@ function iniciarApp() {
                 eliminarFavorito( idMeal );
                 //cuando sea agregado una receta a favoritos cambiamos el text content del boton guardar favorito
                 btnFavorito.textContent = 'Guardar Favorito';
+                //llamar funcion para mostrar toast al eliminar una receta de favoritos
+                mostrarToast('ELIMINADO CORRECTAMENTE');
 
                 //si existe con el return ya no dejamos que ejecute codigo
                 //y por lo tanto que no agregue a favoritos
@@ -255,6 +273,8 @@ function iniciarApp() {
             });
             //si ya esta agregado en el localstorage entonces cambiamos a eliminar favorito
             btnFavorito.textContent = 'Eliminar Favorito';
+            //mostrar toast despues de agregar una receta a favoritos
+            mostrarToast('AGREGADO CORRECTAMENTE');
         }
 
         //BOTON CERRAR MODAL
@@ -311,6 +331,42 @@ function iniciarApp() {
         //obtiene de localstorage y lo convierte con json.stringify en caso de haber algo guardado y en caso que no sera un arreglo vacio
         const favoritos = JSON.parse( localStorage.getItem('favoritos') ) ?? [];
         return favoritos.some( favorito => favorito.id === id );
+    }
+
+    //funcion para mostrar el toast alerta
+    function mostrarToast( mensaje ) {
+        //div que conforma el toast
+        const toastDiv = document.querySelector('#toast');
+        //cuerpo toast
+        const toastBody = document.querySelector('.toast-body');
+        //insertar el mensaje en el toastBody
+        toastBody.textContent = mensaje;
+        ///generar un nuevo toast
+        const toast = new bootstrap.Toast( toastDiv );
+        //mostrar el toast
+        toast.show();
+    }
+
+    //funcion para obtener favoritos
+    function obtenerFavoritos() {
+        //obtener favoritos de localstorage
+        const favoritos = JSON.parse( localStorage.getItem('favoritos') ) ?? [];
+         //verificar si hay algo en favoritos
+         if ( favoritos.length ) {
+            //llamamos funcion mostrar recetas
+            mostrarRecetas( favoritos );
+            return;
+         }
+
+         //en caso de que no haya favoritos
+         const noFavoritos = document.createElement('p');
+         //textcontent
+         noFavoritos.textContent = 'No hay favoritos aún';
+         //estilos
+         noFavoritos.classList.add('fs-4', 'text-center', 'font-bold', 'mt-5');
+         //renderizar
+         favoritosDiv.appendChild( noFavoritos );
+
     }
 
     //funcion para limpiar el html
