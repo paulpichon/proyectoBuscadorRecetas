@@ -229,6 +229,22 @@ function iniciarApp() {
         //textcontent
         btnFavorito.textContent = 'Guardar Favotito';
 
+        //LOCALSTORAGE
+        btnFavorito.onclick = function() {
+            //llamar funcion para agregar a favoritos
+            //como argumento se manda un objeto con la informacion id, titulo de comida, e imagen de la receta a guardar
+            agregarFavorito({
+                id: idMeal,
+                title: strMeal,
+                img: strMealThumb
+            });
+        }
+
+
+
+
+
+
         //BOTON CERRAR MODAL
         //botones de cerrar y favorito
         const btnCerrarModal = document.createElement('BUTTON');
@@ -257,6 +273,16 @@ function iniciarApp() {
         //muestra el modal
         //el metodo .show() es del propio modal de boostrap
         modal.show();
+    }
+
+    //funcion para agregar a favoritos
+    //como parametro tengra un objeto
+    function agregarFavorito( receta ) {
+        //obtener de localstorage
+        // ?? es parecido a poner ||
+        const favoritos = JSON.parse( localStorage.getItem('favoritos') ) ?? [];
+        //crear un registro
+        localStorage.setItem('favoritos', JSON.stringify( [ ...favoritos, receta ] ));
     }
 
     //funcion para limpiar el html
