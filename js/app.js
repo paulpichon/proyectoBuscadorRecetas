@@ -145,7 +145,17 @@ function iniciarApp() {
     function seleccionarReceta( id ) {
         //url + id de la receta seleccionada
         const url = `https://themealdb.com/api/json/v1/1/lookup.php?i=${ id }`;
-        console.log( url );
+        //fetch
+        fetch( url )
+            .then( respuesta => respuesta.json() )
+                //mandamos a llamr una funcion para mostrar la receta en el modal
+                .then( resultado => mostrarRecetaModal( resultado.meals[0] ) )
+    }
+
+    //funcion para mostrar una receta en el modal
+    //como parametro le pasamos una receta
+    function mostrarRecetaModal( receta ) {
+
     }
 
     //funcion para limpiar el html
