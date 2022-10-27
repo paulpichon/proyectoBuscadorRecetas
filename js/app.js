@@ -176,7 +176,43 @@ function iniciarApp() {
             <img class="img-fluid" src="${ strMealThumb }" alt="receta ${ strMeal }" > 
             <h3 class="my-3">Instrucciones</h3>
             <p>${ strInstructions }</p>
+            <h3 class="my-3">Ingredientes y Cantidades</h3>
         `;
+
+        //UL para crear un ORDER LIST
+        const listGroup = document.createElement('UL');
+        //agregar estilos a UL
+        listGroup.classList.add('list-group');
+
+        //mostrar cantidades e ingredientes
+        //CON UN FOR() HAREMOS LA PARTE PARA AGREGAR LOS INGREDIENTES
+        for( let i = 1; i <= 20; i++ ) {
+            //condicion
+            //este codigo nos ira imprimiendo cada uno de los ingredientes ---> receta[`strIngredient${i}`] 
+            //console.log( receta[`strIngredient${i}`] );
+            if ( receta[`strIngredient${i}`] ) {
+                //al estar mapeados( emparejados ) existe relacion tanto del ingrediente como de la cnatidad
+                //si hay ingredientes
+                //es decir si hay 7 ingredientes de 20 solo imprimira los 7 ingredientes y no los demas vacios
+                const ingrediente = receta[`strIngredient${i}`];
+                //cantidades de los ingredientes
+                const cantidad = receta[`strMeasure${i}`];
+                
+                //construir html
+                const ingredienteLi = document.createElement('LI');
+                //estilos
+                ingredienteLi.classList.add('list-group-item');
+                //textcontent
+                ingredienteLi.textContent = `${ ingrediente } - ${ cantidad }`;
+
+                //agregamos a listGroup cada ingredienteLi
+                listGroup.appendChild( ingredienteLi );
+            }
+        }
+
+        //renderizamos los ingredientes
+        //agregamos a modalBody el listGroup
+        modalBody.appendChild( listGroup );
 
 
         //muestra el modal
