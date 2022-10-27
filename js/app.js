@@ -227,18 +227,25 @@ function iniciarApp() {
         //estilos
         btnFavorito.classList.add('btn', 'btn-danger', 'col');
         //textcontent
-        btnFavorito.textContent = 'Guardar Favotito';
+        //llamamos la funcion existeStorage( idMeal ) para que al agregar a favoritos se muestra ya sea Eliminar si es que ya existe 
+        //en el storage o guardar si no existe
+        btnFavorito.textContent = existeStorage( idMeal ) ? 'Eliminar Favorito' : 'Guardar Favorito';
 
         //LOCALSTORAGE
         btnFavorito.onclick = function() {
 
             //comprobamos si existe algun ID repetido
             if ( existeStorage( idMeal ) ) {
+                //si hay existeStorage entonces lo eliminamos 
+                eliminarFavorito( idMeal );
+                //cuando sea agregado una receta a favoritos cambiamos el text content del boton guardar favorito
+                btnFavorito.textContent = 'Guardar Favorito';
+
                 //si existe con el return ya no dejamos que ejecute codigo
                 //y por lo tanto que no agregue a favoritos
                 return;
             }
-            
+
             //llamar funcion para agregar a favoritos
             //como argumento se manda un objeto con la informacion id, titulo de comida, e imagen de la receta a guardar
             agregarFavorito({
@@ -246,6 +253,8 @@ function iniciarApp() {
                 title: strMeal,
                 img: strMealThumb
             });
+            //si ya esta agregado en el localstorage entonces cambiamos a eliminar favorito
+            btnFavorito.textContent = 'Eliminar Favorito';
         }
 
         //BOTON CERRAR MODAL
@@ -285,6 +294,18 @@ function iniciarApp() {
         //crear un registro
         localStorage.setItem('favoritos', JSON.stringify( [ ...favoritos, receta ] ));
     }
+
+    //funcion para eliminar favorito cuando se hace click al boton de agregar favorito
+    function eliminarFavorito( id ) {
+        //obtener de localstorage
+        // ?? es parecido a poner ||
+        const favoritos = JSON.parse( localStorage.getItem('favoritos') ) ?? [];
+        //con .filter() eliminamos el favorito seleccionado
+        const nuevosFavoritos = favoritos.filter( favorito => favorito.id !== id);
+        //guardamos el nuevo arreglo en localstorage
+        localStorage.setItem('favoritos', JSON.stringify( nuevosFavoritos ) );
+    }
+
     //funcion para verificar si el id de la receta agregada ya existe en el localstorage
     function existeStorage( id ) {
         //obtiene de localstorage y lo convierte con json.stringify en caso de haber algo guardado y en caso que no sera un arreglo vacio
