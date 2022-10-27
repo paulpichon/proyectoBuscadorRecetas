@@ -214,6 +214,45 @@ function iniciarApp() {
         //agregamos a modalBody el listGroup
         modalBody.appendChild( listGroup );
 
+        
+        //variable que representa donde se renderizara el boton guardar favorito y de cancelar
+        const modalFooter = document.querySelector('.modal-footer');
+
+        //limpiar el html anterior
+        limpiaHTML( modalFooter );
+
+        //BOTON FAVORITOS
+        //botones de cerrar y favorito
+        const btnFavorito = document.createElement('BUTTON');
+        //estilos
+        btnFavorito.classList.add('btn', 'btn-danger', 'col');
+        //textcontent
+        btnFavorito.textContent = 'Guardar Favotito';
+
+        //BOTON CERRAR MODAL
+        //botones de cerrar y favorito
+        const btnCerrarModal = document.createElement('BUTTON');
+        //estilos
+        btnCerrarModal.classList.add('btn', 'btn-secondary', 'col');
+        //textcontent
+        btnCerrarModal.textContent = 'Cerrar';
+        //funcion para cerrar el modal
+        //se usa onclick ya que el html se crea despues de un evento
+        //se hace con un callback
+        btnCerrarModal.onclick = function() {
+            //crearemos una instancia de la variable modal que esta mas arriba
+            //y con .hide() se cierra el modal
+            modal.hide();
+        }
+
+
+
+        //renderizar
+        //renderizar boton favoritos
+        modalFooter.appendChild( btnFavorito );
+        //renderizar boton cerrar modal
+        modalFooter.appendChild( btnCerrarModal );
+
 
         //muestra el modal
         //el metodo .show() es del propio modal de boostrap
