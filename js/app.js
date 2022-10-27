@@ -57,6 +57,20 @@ function iniciarApp() {
     }
     //funcion para mostrar recetas en base a la categoria seleccionada
     function mostrarRecetas( recetas = []) {
+        //limpiar el html anterior
+        //y como argumento le decimos que sea en resultado
+        limpiaHTML( resultado );
+
+        //heading 
+        const heading = document.createElement('H2');
+        //estilos
+        heading.classList.add('text-center', 'text-black', 'my-5');
+        //textcontent
+        //condicional ternario
+        heading.textContent = recetas.length ? 'Resultados:' : 'No Hay Resultados';
+        //renderizar
+        resultado.appendChild( heading );
+
         //iterar en los resultados
         recetas.forEach( receta => {
             //destructuring
@@ -94,7 +108,18 @@ function iniciarApp() {
             const recetaButton = document.createElement('BUTTON');
             //estilos
             recetaButton.classList.add('btn', 'btn-danger', 'w-100');
+            //textcontent
             recetaButton.textContent = 'Ver Receta';
+            //añadir un atributo con dataSet mas bsTarget de bootstrap = data-bs-target
+            //recetaButton.dataset.bsTarget = '#modal';
+            //llama un o unas funcion dentro de un archivo de javasctipt en este caso = data-bs-toggle="modal"
+            //recetaButton.dataset.bsToggle = 'modal';
+
+            //al no estar renderizado aun en el html usamos onclick
+            recetaButton.onclick = function() {
+                //llamamos funcion para seleccionar receta
+                seleccionarReceta( idMeal );
+            }
 
             //inyectar en el html
             //heading
@@ -114,6 +139,21 @@ function iniciarApp() {
             //renderizar
             resultado.appendChild( recetaContenedor );
         });
+    }
+    //funcion para seleccionar receta
+    //id de la receta selecionada
+    function seleccionarReceta( id ) {
+        //url + id de la receta seleccionada
+        const url = `https://themealdb.com/api/json/v1/1/lookup.php?i=${ id }`;
+        console.log( url );
+    }
+
+    //funcion para limpiar el html
+    //le pasamos como argumento un selector que es el resultado para indidcarle lo que queremos que limpie
+    function limpiaHTML( selector) {
+        while ( selector.firstChild ) {
+            selector.removeChild( selector.firstChild );
+        }
     }
 
 }
