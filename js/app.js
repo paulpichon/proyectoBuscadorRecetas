@@ -1,3 +1,4 @@
+//actualizado
 //funcion para arrancar la APP
 function iniciarApp() {
 
@@ -106,6 +107,7 @@ function iniciarApp() {
             //estilos
             recetaImagen.classList.add('card-img-top');
             //alt a la imagen
+            //Nullish Coalescing Operator -> https://www.javascripttutorial.net/es-next/javascript-nullish-coalescing-operator/
             recetaImagen.alt = `Imagen de la receta ${ strMeal ?? receta.title }`;
             //source de la imagen
             //si no se muestra con strMealThumb se muestra con receta.img
